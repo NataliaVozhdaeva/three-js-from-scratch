@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 import getStarfield from './additional/stars.js';
+import getFresnelMat from './additional/fresnel.js';
 
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -22,9 +23,33 @@ earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
 scene.add(earthGroup);
 earthGroup.add(earthMesh);
 
-const lightsMat = new THREE.MeshBasicMaterial({
-  map: textureLoader.load('textures/earthlights.jpg'),
+const lightsMat = new THREE.ShaderMaterial({
+  uniforms: {
+    map: { value: textureLoader.load('textures/earthlights.jpg') },
+    sunDirection: { value: new THREE.Vector3(-2, 0.5, 1.5).normalize() },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    void main() {
+      vUv = uv;
+      vNormal = normalize(mat3(modelMatrix) * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform sampler2D map;
+    uniform vec3 sunDirection;
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    void main() {
+      float t = smoothstep(-0.1, 0.3, dot(vNormal, -sunDirection));
+      vec4 col = texture2D(map, vUv);
+      gl_FragColor = vec4(col.rgb, t);
+    }
+  `,
   blending: THREE.AdditiveBlending,
+  transparent: true,
 });
 const lightMesh = new THREE.Mesh(geometry, lightsMat);
 earthGroup.add(lightMesh);
@@ -38,6 +63,11 @@ const claudMats = new THREE.MeshStandardMaterial({
 const claudMesh = new THREE.Mesh(geometry, claudMats);
 claudMesh.scale.setScalar(1.003);
 earthGroup.add(claudMesh);
+
+const fresnelMat = getFresnelMat();
+const atmosphere = new THREE.Mesh(geometry, fresnelMat);
+atmosphere.scale.setScalar(1.01);
+earthGroup.add(atmosphere);
 
 const stars = getStarfield({ numStars: 2000 });
 scene.add(stars);
@@ -55,7 +85,10 @@ scene.add(sunLight);
 
 function animate() {
   requestAnimationFrame(animate);
-  earthGroup.rotation.y += 0.002;
+  earthMesh.rotation.y += 0.002;
+  lightMesh.rotation.y += 0.002;
+  atmosphere.rotation.y += 0.002;
+  claudMesh.rotation.y += 0.004;
 
   renderer.render(scene, camera);
 }
