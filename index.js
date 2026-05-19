@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
+import getBack from './background.js';
 
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -24,10 +25,15 @@ scene.add(cube);
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
 scene.add(hemiLight);
 
+const back = getBack();
+
+// back.position.copy(camera.position);
+scene.add(back);
+
 function animate() {
   requestAnimationFrame(animate);
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.02;
+  // cube.rotation.x += 0.01;
+  // cube.rotation.y += 0.02;
   renderer.render(scene, camera);
   controls.update();
 }
