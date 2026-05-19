@@ -1,35 +1,36 @@
 import * as THREE from 'three';
 
-function createSprite(madeFrom, x, y, z, size) {
-  const sprite = new THREE.Sprite(madeFrom);
-  sprite.scale.set(size, size, size);
-  sprite.position.set(x, y, z);
+const loader = new THREE.TextureLoader();
 
+function getSprite({ hasFog, color, opacity, path, pos, size }) {
+  const spriteMat = new THREE.SpriteMaterial({
+    color,
+    fog: hasFog,
+    map: loader.load(path),
+    transparent: true,
+    opacity,
+  });
+  spriteMat.color.offsetHSL(0, 0, Math.random() * 0.2 - 0.1);
+  const sprite = new THREE.Sprite(spriteMat);
+  sprite.position.set(pos.x, -pos.y, pos.z);
+  size += Math.random() - 0.5;
+  sprite.scale.set(size, size, size);
+  sprite.material.rotation = 0;
   return sprite;
 }
 
-export default function getBack() {
-  const loader = new THREE.TextureLoader();
-  const texture = loader.load('./src/circle.png');
+function getLayer({ hasFog = true, hue = 0.0, numSprites = 10, opacity = 1, path = './src/circle.png', radius = 1, sat = 0.5, size = 1, z = 0 }) {
+  const layerGroup = new THREE.Group();
+  for (let i = 0; i < numSprites; i += 1) {
+    let angle = (i / numSprites) * Math.PI * 2;
+    const pos = new THREE.Vector3(Math.cos(angle) * Math.random() * radius, Math.sin(angle) * Math.random() * radius, z + Math.random());
+    // const length = new THREE.Vector3(pos.x, pos.y, 0).length();
+    // const hue = 0.0; // (0.9 - (radius - length) / radius) * 1;
 
-  const material = new THREE.SpriteMaterial({
-    map: texture,
-    transparent: true,
-  });
-
-  const spritesGroup = new THREE.Group();
-
-  for (let i = 0; i < 20; i++) {
-    const angle = (i / 20) * Math.PI * 2;
-    const radius = 2;
-    const depth = 3;
-    const x = Math.cos(angle) * Math.random() * radius;
-    const y = Math.sin(angle) * Math.random() * radius;
-    const z = (i / 20) * depth - depth / 2;
-
-    const sprite = createSprite(material, x, y, z, 1);
-    spritesGroup.add(sprite);
+    let color = new THREE.Color().setHSL(hue, 1, sat);
+    const sprite = getSprite({ hasFog, color, opacity, path, pos, size });
+    layerGroup.add(sprite);
   }
-
-  return spritesGroup;
+  return layerGroup;
 }
+export default getLayer;

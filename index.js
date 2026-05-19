@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
-import getBack from './background.js';
+// import getLayer from './background.js';
+import getStarfield from './stars.js';
 
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -15,20 +16,21 @@ document.body.append(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDampling = true;
 
-const geoCube = new THREE.BoxGeometry();
-const cubeMat = new THREE.MeshStandardMaterial({
-  color: 0x001272,
+const geo = new THREE.SphereGeometry();
+const edges = new THREE.EdgesGeometry(geo, 1);
+const mat = new THREE.LineBasicMaterial({
+  color: 0xffffff,
+  opacity: 0.4,
+  transparent: true,
 });
-const cube = new THREE.Mesh(geoCube, cubeMat);
-scene.add(cube);
+const line = new THREE.LineSegments(edges, mat);
+scene.add(line);
+
+const stars = getStarfield({ numStars: 1000 });
+scene.add(stars);
 
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
 scene.add(hemiLight);
-
-const back = getBack();
-
-// back.position.copy(camera.position);
-scene.add(back);
 
 function animate() {
   requestAnimationFrame(animate);
