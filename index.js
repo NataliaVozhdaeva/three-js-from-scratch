@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'jsm/controls/OrbitControls.js';
-// import getLayer from './background.js';
-import getStarfield from './stars.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import getStarfield from './src/stars.js';
+import { drawThreeGeo } from './src/threeGeoJSON.js';
 
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -9,6 +9,7 @@ const h = window.innerHeight;
 const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
 camera.position.z = 5;
 const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000000, 0.2);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(w, h);
 document.body.append(renderer.domElement);
@@ -29,8 +30,19 @@ scene.add(line);
 const stars = getStarfield({ numStars: 1000 });
 scene.add(stars);
 
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
-scene.add(hemiLight);
+fetch('./geojson/countries.json')
+  .then((response) => response.text())
+  .then((text) => {
+    const data = JSON.parse(text);
+    const countries = drawThreeGeo({
+      json: data,
+      radius: 2,
+      materialOptions: {
+        color: 0x80ff80,
+      },
+    });
+    scene.add(countries);
+  });
 
 function animate() {
   requestAnimationFrame(animate);
