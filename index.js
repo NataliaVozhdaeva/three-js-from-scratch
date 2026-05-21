@@ -16,7 +16,7 @@ document.body.append(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDampling = true;
 
-const geo = new THREE.SphereGeometry();
+const geo = new THREE.SphereGeometry(2);
 const edges = new THREE.EdgesGeometry(geo, 1);
 const mat = new THREE.LineBasicMaterial({
   color: 0xffffff,
@@ -34,8 +34,8 @@ scene.add(hemiLight);
 
 function animate() {
   requestAnimationFrame(animate);
-  // cube.rotation.x += 0.01;
-  // cube.rotation.y += 0.02;
+  // geo.rotation.x += 0.01;
+  // geo.rotation.y += 0.02;
   renderer.render(scene, camera);
   controls.update();
 }
