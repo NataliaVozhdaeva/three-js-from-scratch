@@ -6,7 +6,7 @@ import { drawThreeGeo } from './src/threeGeoJSON.js';
 const w = window.innerWidth;
 const h = window.innerHeight;
 
-const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, w / h, 1, 100);
 camera.position.z = 5;
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x000000, 0.2);

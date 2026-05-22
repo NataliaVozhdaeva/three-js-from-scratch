@@ -197,7 +197,7 @@ export function drawThreeGeo({ json, radius, materalOptions }) {
     clearArrays();
   }
 
-  function drawLine(x_values, y_values, z_values, options) {
+  function drawLine(x_values, y_values, z_values) {
     const lineGeo = new LineGeometry();
     const verts = [];
     for (let i = 0; i < x_values.length; i++) {
@@ -211,8 +211,7 @@ export function drawThreeGeo({ json, radius, materalOptions }) {
     const color = new THREE.Color().setHSL(hue, 1.0, 0.5);
 
     const lineMaterial = new LineMaterial({
-      // color,
-      color: 0x80ff80,
+      color,
       linewidth: 2,
       fog: true,
     });
