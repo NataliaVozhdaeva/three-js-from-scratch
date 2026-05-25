@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three.js Experiments</title>
+    <link rel="stylesheet" href="../src/styles/main.css" />
+    <link rel="stylesheet" href="../src/styles/scroll-page.css" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto+Slab:wght@400;700&display=swap');
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.181.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <nav>
+      <a href="../index.html">Globe</a>
+      <a href="fire-effect.html">Fire effect</a>
+      <a href="scroll-animation.html" class="active">Scroll Animation</a>
+    </nav>
+    <div id="container">
+      <canvas id="three-canvas"></canvas>
+      <div class="hero-panel">
+        <h1>WebGL2</h1>
+        <p>Interactive 3D and 2D graphics</p>
+        <p>No need for plugins.</p>
+      </div>
+
+      <div class="content-panel">
+        <h2>Advanced Texture Handling</h2>
+        <p>More control over textures, 3D textures, multisample textures</p>
+        <p>Higher-quality graphics for games and applications.</p>
+      </div>
+
+      <div class="content-panel">
+        <h2>Transform Feedback</h2>
+        <p>Allows WebGL2 to capture output from the vertex shader and store it in a buffer.</p>
+        <p>Useful in particle systems, physics, where you need to re-use the output of the vertex shader.</p>
+      </div>
+
+      <div class="content-panel">
+        <h2>Multiple Render Targets (MRT)</h2>
+        <p>Write to multiple textures simultaneously</p>
+        <p>Allows for more advanced shading techniques like deferred rendering</p>
+      </div>
+
+      <div class="content-panel">
+        <h2>Geometry Instancing</h2>
+        <p>Lets you render many instances more efficiently.</p>
+        <p>Reduces the overhead and is useful in rendering large numbers of objects, like vegetation, particles, or crowds.</p>
+      </div>
+
+      <div class="content-panel">
+        <h2>Uniform Buffer Objects (UBOs)</h2>
+        <p>Allow data sharing between multiple shaders.</p>
+        <p>More efficient management of global variables</p>
+      </div>
+
+      <div class="hero-panel" id="footer">
+        <h1>Explore More</h1>
+        <p>New possibilities for web-based graphics</p>
+        <p>Dive deeper, check out the <a href="https://registry.khronos.org/webgl/specs/latest/2.0/" target="_blank">official documentation.</a></p>
+      </div>
+    </div>
+    <script type="module" src="./scroll-animation.js"></script>
+  </body>
+</html>

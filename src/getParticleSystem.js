@@ -107,12 +107,6 @@ function getParticleSystem(params) {
   colorSpline.addPoint(0.0, new THREE.Color(0xffffff));
   colorSpline.addPoint(1.0, new THREE.Color(0xffffff));
 
-  const sizeSpline = getLinearSpline((t, a, b) => {
-    return a + t * (b - a);
-  });
-  sizeSpline.addPoint(0.0, 1.0);
-  sizeSpline.addPoint(0.7, 1.0);
-  sizeSpline.addPoint(1.0, 0.0);
   // const radius = 0.5;
   const maxLife = 1.5;
   const maxSize = 2.8;
@@ -140,6 +134,8 @@ function getParticleSystem(params) {
         maxLife: life,
         rotation: Math.random() * 2.0 * Math.PI,
         rotationRate: Math.random() * 0.01 - 0.005,
+        // скорость уменьшения: малое значение — быстро тает с начала, большое — медленнее
+        shrinkRate: Math.random() * 1.0 + 0.3,
         velocity: normal.multiplyScalar(0.3).add(new THREE.Vector3(0, 1.5, 0)),
       });
     }
@@ -183,7 +179,7 @@ function getParticleSystem(params) {
       const t = 1.0 - p.life / p.maxLife;
       p.rotation += p.rotationRate;
       p.alpha = alphaSpline.getValueAt(t);
-      p.currentSize = p.size * sizeSpline.getValueAt(t);
+      p.currentSize = p.size * Math.pow(1.0 - t, p.shrinkRate);
 
       p.colour.copy(colorSpline.getValueAt(t));
 
